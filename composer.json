@@ -10,5 +10,7 @@
             "email": "mtymek@gmail.com"
         }
     ],
-    "require": {}
+    "require": {
+        "ircmaxell/random-lib": "~1.1"
+    }
 }
