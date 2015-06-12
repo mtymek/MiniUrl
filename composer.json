@@ -17,5 +17,10 @@
         "psr-4": {
             "MiniUrl\\": "src"
         }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "MiniUrl\\Test\\": "test"
+        }
     }
 }
