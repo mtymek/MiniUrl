@@ -26,6 +26,13 @@ class ShortUrl
      */
     protected $creationDate;
 
+    public function __construct($fullUrl = null, $shortUrl = null, $creationDate = null)
+    {
+        $this->fullUrl = $fullUrl;
+        $this->shortUrl = $shortUrl;
+        $this->creationDate = $creationDate;
+    }
+
     /**
      * @return int
      */

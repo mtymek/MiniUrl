@@ -73,6 +73,9 @@ class ShortUrlService
             $short = $this->formShortUrl($this->generator->generate());
         } while ($unique = $this->shortUrlRepository->findByShortUrl($short));
 
+        $shortUrl = new ShortUrl($longUrl, $short, new DateTime());
+        $this->shortUrlRepository->save($shortUrl);
+
         return $shortUrl;
     }
 }

@@ -12,5 +12,10 @@
     ],
     "require": {
         "ircmaxell/random-lib": "~1.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "MiniUrl\\": "src"
+        }
     }
 }

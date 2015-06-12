@@ -4,13 +4,30 @@ namespace MiniUrl\Repository;
 
 use MiniUrl\Entity\ShortUrl;
 
+/**
+ * Class FileRepository
+ * For tests only!
+ */
 class FileRepository implements RepositoryInterface
 {
-    private $data;
+    private $urls = [];
+
+    private $fileName;
 
     public function __construct($fileName)
     {
-
+        $this->fileName = $fileName;
+        if (!file_exists($fileName)) {
+            return;
+        }
+        $f = file($fileName);
+        foreach ($f as $line) {
+            if (strlen($line) == 0) {
+                continue;
+            }
+            list($long, $short) = explode("\t", $line);
+            $this->urls[trim($long)] = trim($short);
+        }
     }
 
     /**
@@ -19,7 +36,10 @@ class FileRepository implements RepositoryInterface
      */
     public function findByLongUrl($longUrl)
     {
-        // TODO: Implement findByLongUrl() method.
+        if (!isset($this->urls[$longUrl])) {
+            return null;
+        }
+        return new ShortUrl($longUrl, $this->urls[$longUrl]);
     }
 
     /**
@@ -28,7 +48,10 @@ class FileRepository implements RepositoryInterface
      */
     public function findByShortUrl($shortUrl)
     {
-        // TODO: Implement findByShortUrl() method.
+        if ($key = array_search($shortUrl, $this->urls)) {
+            return new ShortUrl($key, $shortUrl);
+        }
+        return null;
     }
 
     /**
@@ -37,6 +60,11 @@ class FileRepository implements RepositoryInterface
      */
     public function save(ShortUrl $shortUrl)
     {
-        // TODO: Implement save() method.
+        $this->urls[$shortUrl->getFullUrl()] = $shortUrl->getShortUrl();
+        $data = '';
+        foreach ($this->urls as $long => $short) {
+            $data[] = "$long\t$short\n";
+        }
+        file_put_contents($this->fileName, $data);
     }
 }
