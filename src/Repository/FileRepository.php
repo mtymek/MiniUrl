@@ -6,7 +6,7 @@ use MiniUrl\Entity\ShortUrl;
 
 /**
  * Class FileRepository
- * For tests only!
+ * Don't use this class - it was created to help testing this library
  */
 class FileRepository implements RepositoryInterface
 {
