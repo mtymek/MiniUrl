@@ -28,7 +28,7 @@ class PdoRepository implements RepositoryInterface
      */
     public function findByLongUrl($longUrl)
     {
-        $q = "SELECT * FROM short_url WHERE long_url=:long_url LIMIT 1";
+        $q = "SELECT * FROM short_urls WHERE long_url=:long_url LIMIT 1";
         $stmt = $this->pdo->prepare($q);
         $stmt->execute(['long_url' => $longUrl]);
         if (!$row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -44,7 +44,7 @@ class PdoRepository implements RepositoryInterface
      */
     public function findByShortUrl($shortUrl)
     {
-        $q = "SELECT * FROM short_url WHERE short_url=:short_url LIMIT 1";
+        $q = "SELECT * FROM short_urls WHERE short_url=:short_url LIMIT 1";
         $stmt = $this->pdo->prepare($q);
         $stmt->execute(['short_url' => $shortUrl]);
         if (!$row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -60,7 +60,7 @@ class PdoRepository implements RepositoryInterface
      */
     public function save(ShortUrl $shortUrl)
     {
-        $q = "INSERT INTO short_url(long_url, short_url, creation_date) VALUES(:long, :short, :date)";
+        $q = "INSERT INTO short_urls(long_url, short_url, creation_date) VALUES(:long, :short, :date)";
         $stmt = $this->pdo->prepare($q);
         $stmt->execute([
             'long' => $shortUrl->getLongUrl(),
