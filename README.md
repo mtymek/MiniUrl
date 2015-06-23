@@ -40,8 +40,8 @@ $short = $service->shorten('http://google.com');
 echo $short->getShortUrl();
 ```
 
-You can create empty SQLite database using predefined fixture:
+You can create empty SQLite database using schema file:
 
 ```bash
-$ sqlite3 links.db < path/to/miniurl/fixtures/db-sqlite.sql
+$ sqlite3 links.db < path/to/miniurl/schema/db-sqlite.sql
 ```
