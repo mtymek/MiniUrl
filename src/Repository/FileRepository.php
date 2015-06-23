@@ -60,7 +60,7 @@ class FileRepository implements RepositoryInterface
      */
     public function save(ShortUrl $shortUrl)
     {
-        $this->urls[$shortUrl->getFullUrl()] = $shortUrl->getShortUrl();
+        $this->urls[$shortUrl->getLongUrl()] = $shortUrl->getShortUrl();
         $data = '';
         foreach ($this->urls as $long => $short) {
             $data[] = "$long\t$short\n";

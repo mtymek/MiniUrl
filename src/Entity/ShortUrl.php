@@ -7,14 +7,9 @@ use DateTime;
 class ShortUrl
 {
     /**
-     * @var int
-     */
-    protected $id;
-
-    /**
      * @var string
      */
-    protected $fullUrl;
+    protected $longUrl;
 
     /**
      * @var string
@@ -26,43 +21,27 @@ class ShortUrl
      */
     protected $creationDate;
 
-    public function __construct($fullUrl = null, $shortUrl = null, $creationDate = null)
+    public function __construct($longUrl = null, $shortUrl = null, $creationDate = null)
     {
-        $this->fullUrl = $fullUrl;
+        $this->longUrl = $longUrl;
         $this->shortUrl = $shortUrl;
         $this->creationDate = $creationDate;
     }
 
     /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param int $id
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
-
-    /**
      * @return string
      */
-    public function getFullUrl()
+    public function getLongUrl()
     {
-        return $this->fullUrl;
+        return $this->longUrl;
     }
 
     /**
-     * @param string $fullUrl
+     * @param string $longUrl
      */
-    public function setFullUrl($fullUrl)
+    public function setLongUrl($longUrl)
     {
-        $this->fullUrl = $fullUrl;
+        $this->longUrl = $longUrl;
     }
 
     /**

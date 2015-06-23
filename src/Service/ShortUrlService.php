@@ -66,7 +66,7 @@ class ShortUrlService
         }
 
         $shortUrl = new ShortUrl();
-        $shortUrl->setFullUrl($longUrl);
+        $shortUrl->setLongUrl($longUrl);
         $shortUrl->setCreationDate(new DateTime());
 
         do {
