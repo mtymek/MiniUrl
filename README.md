@@ -3,6 +3,9 @@ MiniUrl - PSR-7 link minifier
 
 Simple URL shortener, written in PHP that uses PSR-7.
 
+[![Build Status](https://travis-ci.org/mtymek/MiniUrl.svg?branch=master)](https://travis-ci.org/mtymek/MiniUrl)
+[![Coverage Status](https://coveralls.io/repos/mtymek/MiniUrl/badge.svg)](https://coveralls.io/r/mtymek/MiniUrl)
+
 Usage
 -----
 
