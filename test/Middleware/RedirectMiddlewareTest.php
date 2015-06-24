@@ -16,7 +16,7 @@ class RedirectMiddlewareTest extends PHPUnit_Framework_TestCase
     public function testUserIsRedirectedToLongUrl()
     {
         $shortUrlService = $this->prophesize(ShortUrlService::class);
-        $shortUrlService->findShortUrlByPath('/test')
+        $shortUrlService->expand('/test')
             ->willReturn(new ShortUrl('http://mateusztymek.pl', 'http://short.me/test', new DateTime()));
 
         $middleware = new RedirectMiddleware($shortUrlService->reveal());
@@ -31,7 +31,7 @@ class RedirectMiddlewareTest extends PHPUnit_Framework_TestCase
     public function test404IsReturnedIfShortUrlDoesNotExist()
     {
         $shortUrlService = $this->prophesize(ShortUrlService::class);
-        $shortUrlService->findShortUrlByPath('/test')
+        $shortUrlService->expand('/test')
             ->willReturn(null);
 
         $middleware = new RedirectMiddleware($shortUrlService->reveal());

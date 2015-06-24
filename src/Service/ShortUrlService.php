@@ -66,7 +66,7 @@ class ShortUrlService
      * @param string $path
      * @return ShortUrl|null
      */
-    public function findShortUrlByPath($path)
+    public function expand($path)
     {
         return $this->shortUrlRepository->findByShortUrl($this->formShortUrl($path));
     }

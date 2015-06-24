@@ -37,7 +37,7 @@ class ShortUrlServiceTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('http://long-url.com/pa/t/h', $ret->getLongUrl());
     }
 
-    public function testConstructCreatesDefaultGenrator()
+    public function testConstructCreatesDefaultGenerator()
     {
         $repository = $this->prophesize(RepositoryInterface::class);
         $repository->findByLongUrl('http://long-url.com/pa/t/h')->willReturn(null);
@@ -49,6 +49,19 @@ class ShortUrlServiceTest extends PHPUnit_Framework_TestCase
         // check if we generated 6 random chars, which means default generator is used
         $this->assertRegExp('#http://sho.rt/[a-z0-9]{6}#', $ret->getShortUrl());
         $this->assertEquals('http://long-url.com/pa/t/h', $ret->getLongUrl());
+    }
+
+    public function testExpand()
+    {
+        $shortUrl = new ShortUrl('http://longfoobar.com/long/path/', 'http://sh.ort/foobar');
+        $repository = $this->prophesize(RepositoryInterface::class);
+        $repository->findByShortUrl('http://sh.ort/foobar')
+            ->willReturn($shortUrl);
+
+        $service = new ShortUrlService('http://sh.ort', $repository->reveal());
+        $short = $service->expand('foobar');
+        $this->assertInstanceOf(ShortUrl::class, $short);
+        $this->assertEquals($shortUrl, $short);
     }
 }
 

@@ -23,7 +23,7 @@ class RedirectMiddleware
 
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response)
     {
-        $url = $this->shortUrlService->findShortUrlByPath($request->getUri()->getPath());
+        $url = $this->shortUrlService->expand($request->getUri()->getPath());
 
         if (!$url) {
             return $response->withStatus(404);
