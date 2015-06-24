@@ -44,6 +44,10 @@ class ShortUrlService
         $this->generator = $generator;
     }
 
+    /**
+     * @param string $url
+     * @return string
+     */
     private function normalizeUrl($url)
     {
         return rtrim(trim($url), self::PATH_SEPARATOR);
@@ -55,9 +59,22 @@ class ShortUrlService
      */
     private function formShortUrl($shortPath)
     {
-        return $this->domain . self::PATH_SEPARATOR . $shortPath;
+        return $this->domain . self::PATH_SEPARATOR . ltrim($shortPath, self::PATH_SEPARATOR);
     }
 
+    /**
+     * @param string $path
+     * @return ShortUrl|null
+     */
+    public function findShortUrlByPath($path)
+    {
+        return $this->shortUrlRepository->findByShortUrl($this->formShortUrl($path));
+    }
+
+    /**
+     * @param string $longUrl
+     * @return ShortUrl|null
+     */
     public function shorten($longUrl)
     {
         $longUrl = $this->normalizeUrl($longUrl);
