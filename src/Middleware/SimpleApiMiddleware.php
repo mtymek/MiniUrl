@@ -38,7 +38,7 @@ class SimpleApiMiddleware
 
         $response->getBody()->write($this->shortUrlService->shorten($uri->__toString())->getShortUrl());
 
-        return $response;
+        return $response->withStatus(200);
     }
 
     public function expand(ServerRequestInterface $request, ResponseInterface $response)
@@ -48,15 +48,15 @@ class SimpleApiMiddleware
             return $response->withStatus(400);
         }
 
-        try {
-            $uri = new Uri($params['shortUrl']);
-        } catch (InvalidArgumentException $e) {
+        $parts = parse_url($params['shortUrl']);
+        if (!$parts || !isset($parts['scheme']) || !in_array($parts['scheme'], ['http', 'https'])) {
             return $response->withStatus(400);
         }
+        $long = $this->shortUrlService->expand($parts['path'])->getLongUrl();
 
-        $response->getBody()->write($this->shortUrlService->expand($uri->getPath())->getLongUrl());
+        $response->getBody()->write($long);
 
-        return $response;
+        return $response->withStatus(200);
     }
 
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response)
