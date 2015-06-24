@@ -17,6 +17,9 @@
         "phpunit/dbunit": "~1.4",
         "zendframework/zend-diactoros": "~1.0"
     },
+    "suggest": {
+        "zendframework/zend-diactoros": "PSR-7 implementation required for bundled middleware"
+    },
     "autoload": {
         "psr-4": {
             "MiniUrl\\": "src"

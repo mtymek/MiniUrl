@@ -6,12 +6,27 @@ Simple URL shortener, written in PHP that uses PSR-7.
 Usage
 -----
 
-Shorten link:
+## Create service
+
+Before you start, you need to create new instance of `ShortUrlService`, pass base URL used for link generation
+ (your short domain), and repository that will take care of storing short URLs:
 
 ```php
 $service = new ShortUrlService('http://sho.rt', new PdoRepository($pdo));
-$short = $service->shorten('http://github.com/zendframework/zend-diactoros');
-echo $short->getShortUrl();
+```
+
+### Shorten link
+
+```php
+$url = $service->shorten('http://github.com/zendframework/zend-diactoros');
+echo $url->getShortUrl();
+```
+
+### Expand
+
+```php
+$url = $service->shorten('http://sho.rt/ho3nf1');
+header('Location: ' . $url->getLongUrl());
 ```
 
 Repositories
