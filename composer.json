@@ -1,5 +1,12 @@
 {
     "name": "mtymek/mini-url",
+    "description": "Short URL library",
+    "keywords": [
+        "bit.ly",
+        "short url",
+        "psr-7",
+        "middleware"
+    ],
     "license": "2-Clause BSD",
     "authors": [
         {
