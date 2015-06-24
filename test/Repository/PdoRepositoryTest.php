@@ -2,6 +2,7 @@
 
 namespace MiniUrl\Test\Repository;
 
+use DateTime;
 use MiniUrl\Entity\ShortUrl;
 use MiniUrl\Repository\PdoRepository;
 use MiniUrl\Service\ShortUrlService;
@@ -47,15 +48,40 @@ class PdoRepositoryTest extends PHPUnit_Extensions_Database_TestCase
         $this->assertEquals('http://google.com', $url->getLongUrl());
     }
 
+    public function testFindByLongUrlReturnsNullIfUrlDoesNotExist()
+    {
+        $conn = $this->getConnection()->getConnection();
+        $repo = new PdoRepository($conn);
+        $url = $repo->findByLongUrl('http://yahoo.com');
+        $this->assertNull($url);
+    }
+
+    public function testFindByShortUrl()
+    {
+        $conn = $this->getConnection()->getConnection();
+        $repo = new PdoRepository($conn);
+        $url = $repo->findByShortUrl('http://mini.me/obc5gs');
+        $this->assertInstanceOf(ShortUrl::class, $url);
+        $this->assertEquals('http://mini.me/obc5gs', $url->getShortUrl());
+        $this->assertEquals('http://github.com/zendframework', $url->getLongUrl());
+    }
+
+    public function testFindByShortUrlReturnsNullIfUrlDoesNotExist()
+    {
+        $conn = $this->getConnection()->getConnection();
+        $repo = new PdoRepository($conn);
+        $url = $repo->findByShortUrl('http://mini.me/none');
+        $this->assertNull($url);
+    }
+
     public function testSave()
     {
-//        $t = time();
-//        $shortUrl = new ShortUrl("http://mateusztymek.pl", "http://sho.rt/mat", $t);
-//        $repo = new PdoRepository($this->getConnection()->getConnection());
-//        $repo->save($shortUrl);
-//
-//        $this->assertDataSetsEqual($this->createArrayDataSet([
-//
-//        ]));
+        $shortUrl = new ShortUrl("http://mateusztymek.pl", "http://sho.rt/mat", new DateTime());
+        $repo = new PdoRepository($this->getConnection()->getConnection());
+        $repo->save($shortUrl);
+
+        $this->assertEquals(3, $this->getConnection()->getRowCount('short_urls'));
+        $loaded = $repo->findByShortUrl('http://sho.rt/mat');
+        $this->assertEquals("http://mateusztymek.pl", $loaded->getLongUrl());
     }
 }

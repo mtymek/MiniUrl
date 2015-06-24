@@ -37,14 +37,6 @@ class ShortUrl
     }
 
     /**
-     * @param string $longUrl
-     */
-    public function setLongUrl($longUrl)
-    {
-        $this->longUrl = $longUrl;
-    }
-
-    /**
      * @return string
      */
     public function getShortUrl()
@@ -53,26 +45,10 @@ class ShortUrl
     }
 
     /**
-     * @param string $shortUrl
-     */
-    public function setShortUrl($shortUrl)
-    {
-        $this->shortUrl = $shortUrl;
-    }
-
-    /**
      * @return DateTime
      */
     public function getCreationDate()
     {
         return $this->creationDate;
-    }
-
-    /**
-     * @param DateTime $creationDate
-     */
-    public function setCreationDate($creationDate)
-    {
-        $this->creationDate = $creationDate;
     }
 }

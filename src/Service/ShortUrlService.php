@@ -82,10 +82,6 @@ class ShortUrlService
             return $shortUrl;
         }
 
-        $shortUrl = new ShortUrl();
-        $shortUrl->setLongUrl($longUrl);
-        $shortUrl->setCreationDate(new DateTime());
-
         do {
             $short = $this->formShortUrl($this->generator->generate());
         } while ($unique = $this->shortUrlRepository->findByShortUrl($short));
