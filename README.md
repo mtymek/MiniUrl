@@ -29,6 +29,50 @@ $url = $service->shorten('http://sho.rt/ho3nf1');
 header('Location: ' . $url->getLongUrl());
 ```
 
+Middleware
+----------
+
+### `SimpleApiMiddleware`
+
+`SimpleApiMiddleware` provides implementation of API for shortening and expanding links.  
+
+Example usage:
+
+```php
+$simpleApi = new SimpleApiMiddleware($service);
+
+$server = Zend\Diactoros\Server::createServer(
+    $simpleApi,
+    $_SERVER,
+    $_GET,
+    $_POST,
+    $_COOKIE,
+    $_FILES
+);
+$server->listen();
+```
+
+You can test it using PHP built-in HTTP server:
+
+    $ cd path-to-api
+    $ php -S localhost:8080 api.php
+
+Create short link using CURL:
+
+```bash
+$ curl --data "longUrl=http://mateusztymek.pl/lorem-ipsum-dolor/" http://localhost:8080/shorten
+http://sho.rt/bloq3y
+```
+
+Expand short link:
+
+```bash
+$ curl --data "shortUrl=http://sho.rt/bloq3y" http://localhost:8080/expand
+http://mateusztymek.pl/lorem-ipsum-dolor
+```
+
+See `examples` directory for working code.
+
 Repositories
 ------------
 
