@@ -1,6 +1,6 @@
 {
     "name": "mtymek/mini-url",
-    "description": "Short URL library",
+    "description": "Short URL library, built on PSR-7 and middlewares",
     "keywords": [
         "bit.ly",
         "short url",
