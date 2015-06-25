@@ -30,13 +30,12 @@ class SimpleApiMiddleware
             return $response->withStatus(400);
         }
 
-        try {
-            $uri = new Uri($params['longUrl']);
-        } catch (InvalidArgumentException $e) {
+        $parts = parse_url($params['longUrl']);
+        if (!$parts || !isset($parts['scheme']) || !in_array($parts['scheme'], ['http', 'https'])) {
             return $response->withStatus(400);
         }
 
-        $response->getBody()->write($this->shortUrlService->shorten($uri->__toString())->getShortUrl());
+        $response->getBody()->write($this->shortUrlService->shorten($params['longUrl'])->getShortUrl());
 
         return $response->withStatus(200);
     }
