@@ -1,38 +1,80 @@
 MiniUrl - PSR-7 link minifier
 =============================
 
-Simple URL shortener, written in PHP that uses PSR-7.
+**Simple URL shortener written in PHP, using PSR-7 & middleware.**
+
+It can be used as a free, open-source replacement for bit.ly's core functionality: creating short links
+and redirecting users.
 
 Usage
 -----
 
-## Create service
+There are many ways of using MiniUrl, depending on your needs. You can implant it into your app and use it as 
+a part of your business logic, or you can use provided middleware to create a website that exposes link shortening
+directly to your users.
 
 Before you start, you need to create new instance of `ShortUrlService`, pass base URL used for link generation
  (your short domain), and repository that will take care of storing short URLs:
 
 ```php
+$pdo = new PDO("sqlite:links.db");
 $service = new ShortUrlService('http://sho.rt', new PdoRepository($pdo));
 ```
+
+Short URL service
+-----------------
+
+`ShortUrlService` is the foundation of MiniUrl - it is what you want to use when you need to shorten URLs
+inside your application logic.
 
 ### Shorten link
 
 ```php
 $url = $service->shorten('http://github.com/zendframework/zend-diactoros');
 echo $url->getShortUrl();
+
+// output: http://sho.rt/Wwr3bMu
 ```
 
 ### Expand
 
 ```php
-$url = $service->shorten('http://sho.rt/ho3nf1');
+$url = $service->expand('http://sho.rt/ho3nf1');
 header('Location: ' . $url->getLongUrl());
 ```
 
 Middleware
 ----------
 
-### `SimpleApiMiddleware`
+Typically, URL shortener should expose two functionalities: generating short links, and redirecting users to full 
+URLs. MiniUrl comes with handy middleware that make this extremely easy. Based on PSR-7 standard, they can be
+easily wrapped 
+
+
+### RedirectMiddleware
+
+When user opens short link in his browser, he is expected to be redirected to destination URL. This can be easily 
+done using `RedirectMiddleware`. It takes the incoming request, extract path part from URI (domain and query
+are ignored), finds matching long URL and redirect user. If link cannot be found in the repository, response with 
+ 404 code is returned.
+ 
+ Example usage:
+
+```php
+$redirector = new RedirectMiddleware($service);
+
+$server = Zend\Diactoros\Server::createServer(
+    $redirector,
+    $_SERVER,
+    $_GET,
+    $_POST,
+    $_COOKIE,
+    $_FILES
+);
+$server->listen();
+```
+
+### SimpleApiMiddleware
 
 `SimpleApiMiddleware` provides implementation of API for shortening and expanding links.  
 
@@ -70,6 +112,8 @@ Expand short link:
 $ curl --data "shortUrl=http://sho.rt/bloq3y" http://localhost:8080/expand
 http://mateusztymek.pl/lorem-ipsum-dolor
 ```
+
+Typically you will want to wrap `SimpleApi` into another middleware that will authorize your users. 
 
 See `examples` directory for working code.
 
