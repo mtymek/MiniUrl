@@ -1,11 +1,14 @@
 {
     "name": "mtymek/mini-url",
-    "description": "Short URL library, built on PSR-7 and middlewares",
+    "description": "Short URL library, built on PSR-7 and middleware",
     "keywords": [
         "bit.ly",
         "short url",
+        "url shortener",
+        "shorten",
         "psr-7",
-        "middleware"
+        "middleware",
+        "url"
     ],
     "license": "2-Clause BSD",
     "authors": [

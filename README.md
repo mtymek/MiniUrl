@@ -9,6 +9,15 @@ and redirecting users.
 [![Build Status](https://travis-ci.org/mtymek/MiniUrl.svg?branch=master)](https://travis-ci.org/mtymek/MiniUrl)
 [![Coverage Status](https://coveralls.io/repos/mtymek/MiniUrl/badge.svg)](https://coveralls.io/r/mtymek/MiniUrl)
 
+Installation
+------------
+
+Install this library using composer:
+
+```bash
+composer require mtymek/mini-url
+```
+
 Usage
 -----
 
@@ -36,7 +45,7 @@ inside your application logic.
 $url = $service->shorten('http://github.com/zendframework/zend-diactoros');
 echo $url->getShortUrl();
 
-// output: http://sho.rt/Wwr3bMu
+// example output: http://sho.rt/Wwr3bMu
 ```
 
 ### Expand
