@@ -6,6 +6,9 @@ MiniUrl - PSR-7 link minifier
 It can be used as a free, open-source replacement for bit.ly's core functionality: creating short links
 and redirecting users.
 
+[![Build Status](https://travis-ci.org/mtymek/MiniUrl.svg?branch=master)](https://travis-ci.org/mtymek/MiniUrl)
+[![Coverage Status](https://coveralls.io/repos/mtymek/MiniUrl/badge.svg)](https://coveralls.io/r/mtymek/MiniUrl)
+
 Usage
 -----
 
