@@ -21,12 +21,12 @@ composer require mtymek/mini-url
 Usage
 -----
 
-There are many ways of using MiniUrl, depending on your needs. You can implant it into your app and use it as 
+There are many ways of using MiniUrl, depending on your needs. You can incorporate it into your app and use it as 
 a part of your business logic, or you can use provided middleware to create a website that exposes link shortening
 directly to your users.
 
 Before you start, you need to create new instance of `ShortUrlService`, pass base URL used for link generation
- (your short domain), and repository that will take care of storing short URLs:
+(your short domain) and repository that will take care of storing short URLs:
 
 ```php
 $pdo = new PDO("sqlite:links.db");
@@ -58,17 +58,16 @@ header('Location: ' . $url->getLongUrl());
 Middleware
 ----------
 
-Typically, URL shortener should expose two functionalities: generating short links, and redirecting users to full 
-URLs. MiniUrl comes with handy middleware that make this extremely easy. Based on PSR-7 standard, they can be
-easily wrapped 
-
+Typically, URL shortener should expose two functionalities: generating short links and redirecting users to full 
+URLs. `MiniUrl` comes with handy middleware which makes it extremely easy. Based on PSR-7 standard, they can be
+easily wrapped inside other middleware that handles authentication or routing.
 
 ### RedirectMiddleware
 
 When user opens short link in his browser, he is expected to be redirected to destination URL. This can be easily 
-done using `RedirectMiddleware`. It takes the incoming request, extract path part from URI (domain and query
-are ignored), finds matching long URL and redirect user. If link cannot be found in the repository, response with 
- 404 code is returned.
+done using `RedirectMiddleware`. It takes the incoming request, extracts a `path` part from URI (domain and query
+are ignored), finds matching long URL and finally redirect user. If link cannot be found in the repository, response 
+with 404 code is returned.
  
  Example usage:
 
@@ -125,7 +124,7 @@ $ curl --data "shortUrl=http://sho.rt/bloq3y" http://localhost:8080/expand
 http://mateusztymek.pl/lorem-ipsum-dolor
 ```
 
-Typically you will want to wrap `SimpleApi` into another middleware that will authorize your users. 
+Typically, you will want to wrap `SimpleApi` into another middleware that authorizes your users. 
 
 See `examples` directory for working code.
 
@@ -167,7 +166,7 @@ CREATE TABLE short_urls (
 CREATE INDEX short_url_idx ON short_urls(short_url);
 ```
 
-You can create empty SQLite database using schema file:
+You can create an empty SQLite database using schema file:
 
 ```bash
 $ sqlite3 links.db < path/to/miniurl/schema/db-sqlite.sql
