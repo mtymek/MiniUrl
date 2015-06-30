@@ -7,6 +7,7 @@
         "url shortener",
         "shorten",
         "psr-7",
+        "psr7",
         "middleware",
         "url"
     ],
