@@ -85,17 +85,17 @@ $server = Zend\Diactoros\Server::createServer(
 $server->listen();
 ```
 
-### SimpleApiMiddleware
+### ShortenApiMiddleware
 
-`SimpleApiMiddleware` provides implementation of API for shortening and expanding links.  
+`ShortenApiMiddleware` provides implementation of API for shortening links.  
 
 Example usage:
 
 ```php
-$simpleApi = new SimpleApiMiddleware($service);
+$shortenApi = new ShortenApiMiddleware($service);
 
 $server = Zend\Diactoros\Server::createServer(
-    $simpleApi,
+    $shortenApi,
     $_SERVER,
     $_GET,
     $_POST,
@@ -108,23 +108,49 @@ $server->listen();
 You can test it using PHP built-in HTTP server:
 
     $ cd path-to-api
-    $ php -S localhost:8080 api.php
+    $ php -S localhost:8080 shorten-api.php
 
 Create short link using CURL:
 
 ```bash
-$ curl --data "longUrl=http://mateusztymek.pl/lorem-ipsum-dolor/" http://localhost:8080/shorten
+$ curl --data "longUrl=http://mateusztymek.pl/lorem-ipsum-dolor/" http://localhost:8080
 http://sho.rt/bloq3y
 ```
+
+Typically, you will want to wrap `ShortenApi` into another middleware that authorizes your users.
+
+### ExpandApiMiddleware
+
+`ExpandApiMiddleware` provides implementation of API for expanding short links.  
+
+Example usage:
+
+```php
+$expandApi = new ExpandApiMiddleware($service);
+
+$server = Zend\Diactoros\Server::createServer(
+    $expandApi,
+    $_SERVER,
+    $_GET,
+    $_POST,
+    $_COOKIE,
+    $_FILES
+);
+$server->listen();
+```
+
+You can test it using PHP built-in HTTP server:
+
+    $ cd path-to-api
+    $ php -S localhost:9090 expand-api.php
+
 
 Expand short link:
 
 ```bash
-$ curl --data "shortUrl=http://sho.rt/bloq3y" http://localhost:8080/expand
+$ curl --data "shortUrl=http://sho.rt/bloq3y" http://localhost:9090
 http://mateusztymek.pl/lorem-ipsum-dolor
-```
-
-Typically, you will want to wrap `SimpleApi` into another middleware that authorizes your users. 
+``` 
 
 See `examples` directory for working code.
 

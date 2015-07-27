@@ -7,7 +7,7 @@
  *    $ sqlite3 links.db < ../schema/db-sqlite.sql
  */
 
-use MiniUrl\Middleware\SimpleApiMiddleware;
+use MiniUrl\Middleware\ExpandApiMiddleware;
 use MiniUrl\Repository\PdoRepository;
 use MiniUrl\Service\ShortUrlService;
 
@@ -17,10 +17,10 @@ $pdo = new PDO('sqlite:' . __DIR__ . '/links.db');
 $repository = new PdoRepository($pdo);
 $service = new ShortUrlService('http://sho.rt', $repository);
 
-$simpleApi = new SimpleApiMiddleware($service);
+$expandApi = new ExpandApiMiddleware($service);
 
 $server = Zend\Diactoros\Server::createServer(
-    $simpleApi,
+    $expandApi,
     $_SERVER,
     $_GET,
     $_POST,
