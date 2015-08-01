@@ -4,6 +4,7 @@ namespace MiniUrl\Service;
 
 use DateTime;
 use MiniUrl\Entity\ShortUrl;
+use MiniUrl\Exception\InvalidArgumentException;
 use MiniUrl\Repository\RepositoryInterface;
 
 class ShortUrlService
@@ -50,7 +51,7 @@ class ShortUrlService
      */
     private function normalizeUrl($url)
     {
-        return rtrim(trim($url), self::PATH_SEPARATOR);
+        return rtrim($url, self::PATH_SEPARATOR);
     }
 
     /**
@@ -77,6 +78,10 @@ class ShortUrlService
      */
     public function shorten($longUrl)
     {
+        if (filter_var($longUrl, FILTER_VALIDATE_URL) === false) {
+            throw new InvalidArgumentException("'$longUrl' is not valid URL.");
+        }
+
         $longUrl = $this->normalizeUrl($longUrl);
         if ($shortUrl = $this->shortUrlRepository->findByLongUrl($longUrl)) {
             return $shortUrl;

@@ -3,6 +3,7 @@
 namespace MiniUrl\Test\Service;
 
 use MiniUrl\Entity\ShortUrl;
+use MiniUrl\Exception\InvalidArgumentException;
 use MiniUrl\Repository\RepositoryInterface;
 use MiniUrl\Service\ShortUrlService;
 use MiniUrl\Service\UrlGeneratorInterface;
@@ -11,6 +12,14 @@ use Prophecy\Argument;
 
 class ShortUrlServiceTest extends PHPUnit_Framework_TestCase
 {
+    public function testShortenThrowsExceptionIfUrlIsNotValid()
+    {
+        $repository = $this->prophesize(RepositoryInterface::class);
+        $service = new ShortUrlService('http://sho.rt/', $repository->reveal());
+        $this->setExpectedException(InvalidArgumentException::class);
+        $service->shorten('//not-valid-url');
+    }
+
     public function testShortenReturnsPreviouslyShortenedUrl()
     {
         $repository = $this->prophesize(RepositoryInterface::class);
