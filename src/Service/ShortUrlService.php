@@ -25,8 +25,10 @@ class ShortUrlService
     private $url;
 
     /**
-     * @param $domain
-     * @param RepositoryInterface $shortUrlRepository
+     * ShortUrlService constructor.
+     *
+     * @param UrlInterface               $url
+     * @param RepositoryInterface        $shortUrlRepository
      * @param UrlGeneratorInterface|null $generator
      */
     public function __construct(
@@ -63,8 +65,8 @@ class ShortUrlService
         }
 
         $longUrl = $this->url->normalizeUrl($longUrl);
-        if ($shortUrl = $this->shortUrlRepository->findByLongUrl($longUrl)) {
-            return $shortUrl;
+        if ($hash = $this->shortUrlRepository->findByLongUrl($longUrl)) {
+            return $hash;
         }
 
         do {
@@ -73,6 +75,6 @@ class ShortUrlService
 
         $this->shortUrlRepository->save($longUrl, $hash, new DateTime());
 
-        return $shortUrl;
+        return $hash;
     }
 }
