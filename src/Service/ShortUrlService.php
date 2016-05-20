@@ -73,7 +73,7 @@ class ShortUrlService
             $hash = $this->generator->generate();
         } while ($unique = $this->shortUrlRepository->findByShortUrl($hash));
 
-        $this->shortUrlRepository->save($longUrl, $hash, new DateTime());
+        $this->shortUrlRepository->save($hash, $longUrl, new DateTime());
 
         return $hash;
     }
