@@ -51,7 +51,7 @@ class ShortUrlService
      */
     public function expand($path)
     {
-        return $this->shortUrlRepository->findByShortUrl($this->url->formShortUrl($path));
+        return $this->shortUrlRepository->findByShortUrl($this->url->normalizeUrl($path));
     }
 
     /**
