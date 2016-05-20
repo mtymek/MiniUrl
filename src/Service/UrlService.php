@@ -2,12 +2,10 @@
 
 namespace MiniUrl\Service;
 
-use DateTime;
-use MiniUrl\Entity\ShortUrl;
-use MiniUrl\Exception\InvalidArgumentException;
-use MiniUrl\Repository\RepositoryInterface;
-
-class UrlService
+/**
+ * Class UrlService
+ */
+class UrlService implements UrlInterface
 {
     /**
      * @var string
