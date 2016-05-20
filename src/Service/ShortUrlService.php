@@ -38,9 +38,7 @@ class ShortUrlService
         $this->shortUrlRepository = $shortUrlRepository;
 
         if (null === $generator) {
-            $factory = new RandomLibFactory();
-            $randomizer = $factory->getMediumStrengthGenerator();
-            $generator = new UrlGeneratorService($randomizer);
+            $generator = new UrlGeneratorService();
         }
         $this->generator = $generator;
     }
