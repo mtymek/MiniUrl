@@ -30,10 +30,11 @@ class ShortUrlService
      * @param UrlGeneratorInterface|null $generator
      */
     public function __construct(
-        UrlService $url,
+        UrlInterface $url,
         RepositoryInterface $shortUrlRepository,
         UrlGeneratorInterface $generator = null
     ) {
+        $this->url = $url;
         $this->shortUrlRepository = $shortUrlRepository;
 
         if (null === $generator) {
@@ -45,30 +46,12 @@ class ShortUrlService
     }
 
     /**
-     * @param string $url
-     * @return string
-     */
-    private function normalizeUrl($url)
-    {
-        return rtrim($url, self::PATH_SEPARATOR);
-    }
-
-    /**
-     * @param string $hash
-     * @return string
-     */
-    private function formShortUrl($hash)
-    {
-        return $this->domain . self::PATH_SEPARATOR . $hash;
-    }
-
-    /**
      * @param string $path
      * @return ShortUrl|null
      */
     public function expand($path)
     {
-        return $this->shortUrlRepository->findByShortUrl($this->formShortUrl($path));
+        return $this->shortUrlRepository->findByShortUrl($this->url->formShortUrl($path));
     }
 
     /**
@@ -81,7 +64,7 @@ class ShortUrlService
             throw new InvalidArgumentException("'$longUrl' is not valid URL.");
         }
 
-        $longUrl = $this->normalizeUrl($longUrl);
+        $longUrl = $this->url->normalizeUrl($longUrl);
         if ($shortUrl = $this->shortUrlRepository->findByLongUrl($longUrl)) {
             return $shortUrl;
         }
