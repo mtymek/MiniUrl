@@ -3,24 +3,31 @@
 namespace MiniUrl\Repository;
 
 use MiniUrl\Entity\ShortUrl;
+use DateTime;
 
+/**
+ * Interface RepositoryInterface
+ */
 interface RepositoryInterface
 {
     /**
      * @param $longUrl
-     * @return ShortUrl|null
+     * @return String
      */
     public function findByLongUrl($longUrl);
 
     /**
      * @param $shortUrl
-     * @return ShortUrl|null
+     * @return string
      */
     public function findByShortUrl($shortUrl);
 
     /**
-     * @param ShortUrl $shortUrl
+     * @param String   $shortHash
+     * @param String   $url
+     * @param DateTime $createdAt
+     *
      * @return void
      */
-    public function save(ShortUrl $shortUrl);
+    public function save($shortHash, $url, DateTime $createdAt);
 }

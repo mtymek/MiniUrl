@@ -9,13 +9,6 @@ use MiniUrl\Repository\RepositoryInterface;
 
 class ShortUrlService
 {
-    const PATH_SEPARATOR = '/';
-
-    /**
-     * @var string
-     */
-    private $domain;
-
     /**
      * @var RepositoryInterface
      */
@@ -27,20 +20,26 @@ class ShortUrlService
     private $generator;
 
     /**
+     * @var UrlService
+     */
+    private $url;
+
+    /**
      * @param $domain
      * @param RepositoryInterface $shortUrlRepository
      * @param UrlGeneratorInterface|null $generator
      */
     public function __construct(
-        $domain,
+        UrlService $url,
         RepositoryInterface $shortUrlRepository,
         UrlGeneratorInterface $generator = null
     ) {
-        $this->domain = $this->normalizeUrl($domain);
         $this->shortUrlRepository = $shortUrlRepository;
 
         if (null === $generator) {
-            $generator = new UrlGeneratorService();
+            $factory = new RandomLibFactory();
+            $randomizer = $factory->getMediumStrengthGenerator();
+            $generator = new UrlGeneratorService($randomizer);
         }
         $this->generator = $generator;
     }
@@ -55,12 +54,12 @@ class ShortUrlService
     }
 
     /**
-     * @param string $shortPath
+     * @param string $hash
      * @return string
      */
-    private function formShortUrl($shortPath)
+    private function formShortUrl($hash)
     {
-        return $this->domain . self::PATH_SEPARATOR . ltrim($shortPath, self::PATH_SEPARATOR);
+        return $this->domain . self::PATH_SEPARATOR . $hash;
     }
 
     /**
@@ -88,11 +87,10 @@ class ShortUrlService
         }
 
         do {
-            $short = $this->formShortUrl($this->generator->generate());
-        } while ($unique = $this->shortUrlRepository->findByShortUrl($short));
+            $hash = $this->generator->generate();
+        } while ($unique = $this->shortUrlRepository->findByShortUrl($hash));
 
-        $shortUrl = new ShortUrl($longUrl, $short, new DateTime());
-        $this->shortUrlRepository->save($shortUrl);
+        $this->shortUrlRepository->save($longUrl, $hash, new DateTime());
 
         return $shortUrl;
     }
