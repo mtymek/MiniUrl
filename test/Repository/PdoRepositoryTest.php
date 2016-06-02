@@ -38,50 +38,45 @@ class PdoRepositoryTest extends PHPUnit_Extensions_Database_TestCase
         return $this->createFlatXMLDataSet(__DIR__ . '/../data/shortlinks-seed.xml');
     }
 
-    public function testFindByLongUrl()
+    public function testFindShortUrl()
     {
         $conn = $this->getConnection()->getConnection();
         $repo = new PdoRepository($conn);
-        $url = $repo->findByLongUrl('http://google.com');
-        $this->assertInstanceOf(ShortUrl::class, $url);
-        $this->assertEquals('http://mini.me/w1kheu', $url->getShortUrl());
-        $this->assertEquals('http://google.com', $url->getLongUrl());
+        $url = $repo->findShortHash('http://google.com');
+        $this->assertEquals('w1kheu', $url);
     }
 
-    public function testFindByLongUrlReturnsNullIfUrlDoesNotExist()
+    public function testFindShortUrlReturnsNullIfUrlDoesNotExist()
     {
         $conn = $this->getConnection()->getConnection();
         $repo = new PdoRepository($conn);
-        $url = $repo->findByLongUrl('http://yahoo.com');
+        $url = $repo->findShortHash('http://yahoo.com');
         $this->assertNull($url);
     }
 
-    public function testFindByShortUrl()
+    public function testFindLongUrl()
     {
         $conn = $this->getConnection()->getConnection();
         $repo = new PdoRepository($conn);
-        $url = $repo->findByShortUrl('http://mini.me/obc5gs');
-        $this->assertInstanceOf(ShortUrl::class, $url);
-        $this->assertEquals('http://mini.me/obc5gs', $url->getShortUrl());
-        $this->assertEquals('http://github.com/zendframework', $url->getLongUrl());
+        $url = $repo->findLongUrl('obc5gs');
+        $this->assertEquals('http://github.com/zendframework', $url);
     }
 
-    public function testFindByShortUrlReturnsNullIfUrlDoesNotExist()
+    public function testFindLongUrlReturnsNullIfUrlDoesNotExist()
     {
         $conn = $this->getConnection()->getConnection();
         $repo = new PdoRepository($conn);
-        $url = $repo->findByShortUrl('http://mini.me/none');
+        $url = $repo->findLongUrl('none');
         $this->assertNull($url);
     }
 
     public function testSave()
     {
-        $shortUrl = new ShortUrl("http://mateusztymek.pl", "http://sho.rt/mat", new DateTime());
         $repo = new PdoRepository($this->getConnection()->getConnection());
-        $repo->save($shortUrl);
+        $repo->save("mat", "http://mateusztymek.pl");
 
         $this->assertEquals(3, $this->getConnection()->getRowCount('short_urls'));
-        $loaded = $repo->findByShortUrl('http://sho.rt/mat');
-        $this->assertEquals("http://mateusztymek.pl", $loaded->getLongUrl());
+        $loaded = $repo->findLongUrl('mat');
+        $this->assertEquals("http://mateusztymek.pl", $loaded);
     }
 }

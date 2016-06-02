@@ -2,10 +2,7 @@
 
 namespace MiniUrl\Repository;
 
-use MiniUrl\Entity\ShortUrl;
-
 /**
- * Class FileRepository
  * Don't use this class - it was created to help testing this library
  * @codeCoverageIgnore
  */
@@ -33,35 +30,37 @@ class FileRepository implements RepositoryInterface
 
     /**
      * @param $longUrl
-     * @return ShortUrl|null
+     *
+     * @return string
      */
-    public function findByLongUrl($longUrl)
+    public function findShortHash($longUrl)
     {
         if (!isset($this->urls[$longUrl])) {
             return null;
         }
-        return new ShortUrl($longUrl, $this->urls[$longUrl]);
+        return $this->urls[$longUrl];
     }
 
     /**
-     * @param $shortUrl
-     * @return ShortUrl|null
+     * @param $shortHash
+     *
+     * @return string
      */
-    public function findByShortUrl($shortUrl)
+    public function findLongUrl($shortHash)
     {
-        if ($key = array_search($shortUrl, $this->urls)) {
-            return new ShortUrl($key, $shortUrl);
+        if ($key = array_search($shortHash, $this->urls)) {
+            return $key;
         }
         return null;
     }
 
     /**
-     * @param ShortUrl $shortUrl
-     * @return void
+     * @param $shortHash
+     * @param $longUrl
      */
-    public function save(ShortUrl $shortUrl)
+    public function save($shortHash, $longUrl)
     {
-        $this->urls[$shortUrl->getLongUrl()] = $shortUrl->getShortUrl();
+        $this->urls[$longUrl] = $shortHash;
         $data = '';
         foreach ($this->urls as $long => $short) {
             $data[] = "$long\t$short\n";

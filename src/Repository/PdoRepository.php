@@ -2,13 +2,10 @@
 
 namespace MiniUrl\Repository;
 
-use MiniUrl\Entity\ShortUrl;
-use MiniUrl\Service\ShortUrlService;
 use PDO;
 
 /**
- * Class FileRepository
- * For tests only!
+ * Example repository that stores short URLs in SQL database
  */
 class PdoRepository implements RepositoryInterface
 {
@@ -24,48 +21,49 @@ class PdoRepository implements RepositoryInterface
 
     /**
      * @param $longUrl
-     * @return ShortUrl|null
+     *
+     * @return string
      */
-    public function findByLongUrl($longUrl)
+    public function findShortHash($longUrl)
     {
-        $q = "SELECT * FROM short_urls WHERE long_url=:long_url LIMIT 1";
+        $q = "SELECT short_hash FROM short_urls WHERE long_url=:long_url LIMIT 1";
         $stmt = $this->pdo->prepare($q);
         $stmt->execute(['long_url' => $longUrl]);
         if (!$row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             return null;
         }
 
-        return new ShortUrl($row['long_url'], $row['short_url'], $row['creation_date']);
+        return $row['short_hash'];
     }
 
     /**
-     * @param $shortUrl
-     * @return ShortUrl|null
+     * @param $shortHash
+     *
+     * @return string
      */
-    public function findByShortUrl($shortUrl)
+    public function findLongUrl($shortHash)
     {
-        $q = "SELECT * FROM short_urls WHERE short_url=:short_url LIMIT 1";
+        $q = "SELECT long_url FROM short_urls WHERE short_hash=:short_hash LIMIT 1";
         $stmt = $this->pdo->prepare($q);
-        $stmt->execute(['short_url' => $shortUrl]);
+        $stmt->execute(['short_hash' => $shortHash]);
         if (!$row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             return null;
         }
 
-        return new ShortUrl($row['long_url'], $row['short_url'], $row['creation_date']);
+        return $row['long_url'];
     }
 
     /**
-     * @param ShortUrl $shortUrl
-     * @return void
+     * @param $shortHash
+     * @param $longUrl
      */
-    public function save(ShortUrl $shortUrl)
+    public function save($shortHash, $longUrl)
     {
-        $q = "INSERT INTO short_urls(long_url, short_url, creation_date) VALUES(:long, :short, :date)";
+        $q = "INSERT INTO short_urls(long_url, short_hash) VALUES(:long_url, :short_hash)";
         $stmt = $this->pdo->prepare($q);
         $stmt->execute([
-            'long' => $shortUrl->getLongUrl(),
-            'short' => $shortUrl->getShortUrl(),
-            'date' => $shortUrl->getCreationDate()->getTimestamp(),
+            'long_url' => $longUrl,
+            'short_hash' => $shortHash,
         ]);
     }
 }
