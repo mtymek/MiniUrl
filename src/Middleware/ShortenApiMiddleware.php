@@ -8,17 +8,16 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class ShortenApiMiddleware
 {
-    /**
-     * @var ShortUrlService
-     */
+    /** @var ShortUrlService */
     private $shortUrlService;
 
-    /**
-     * @param ShortUrlService $shortUrlService
-     */
-    public function __construct(ShortUrlService $shortUrlService)
+    /** @var string */
+    private $domain;
+
+    public function __construct(ShortUrlService $shortUrlService, $domain)
     {
         $this->shortUrlService = $shortUrlService;
+        $this->domain = $domain;
     }
 
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response)
@@ -33,7 +32,7 @@ class ShortenApiMiddleware
             return $response->withStatus(400);
         }
 
-        $response->getBody()->write($this->shortUrlService->shorten($params['longUrl'])->getShortUrl());
+        $response->getBody()->write($this->domain . '/' . $this->shortUrlService->shorten($params['longUrl']));
 
         return $response->withStatus(200);
     }

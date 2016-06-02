@@ -10,15 +10,15 @@ use Zend\Diactoros\Request;
 use Zend\Diactoros\Response;
 use Zend\Diactoros\ServerRequest;
 
-class SimpleApiMiddlewareTest extends PHPUnit_Framework_TestCase
+class ShortenApiMiddlewareTest extends PHPUnit_Framework_TestCase
 {
     public function testShortenReturnsShortenUrl()
     {
         $shortUrlService = $this->prophesize(ShortUrlService::class);
         $shortUrlService->shorten('https://github.com/zendframework/zend-stratigility')
-            ->willReturn(new ShortUrl('https://github.com/zendframework/zend-stratigility', 'http://short.me/squeezed'));
+            ->willReturn('squeezed');
 
-        $middleware = new ShortenApiMiddleware($shortUrlService->reveal());
+        $middleware = new ShortenApiMiddleware($shortUrlService->reveal(), 'http://short.me');
 
         $request = new ServerRequest([], [], 'http://short.me/shorten');
         $request = $request->withParsedBody(['longUrl' => 'https://github.com/zendframework/zend-stratigility']);
@@ -30,7 +30,7 @@ class SimpleApiMiddlewareTest extends PHPUnit_Framework_TestCase
     public function testShortenReturns400whenLongUrlIsMissing()
     {
         $shortUrlService = $this->prophesize(ShortUrlService::class);
-        $middleware = new ShortenApiMiddleware($shortUrlService->reveal());
+        $middleware = new ShortenApiMiddleware($shortUrlService->reveal(), 'http://short.me');
 
         $request = new ServerRequest([], [], 'http://short.me/shorten');
         $request = $request->withParsedBody(['x' => 'y']);
@@ -41,7 +41,7 @@ class SimpleApiMiddlewareTest extends PHPUnit_Framework_TestCase
     public function testShortenReturns400whenSchemeIsNotHttp()
     {
         $shortUrlService = $this->prophesize(ShortUrlService::class);
-        $middleware = new ShortenApiMiddleware($shortUrlService->reveal());
+        $middleware = new ShortenApiMiddleware($shortUrlService->reveal(), 'http://short.me');
 
         $request = new ServerRequest([], [], 'http://short.me/shorten');
         $request = $request->withParsedBody(['longUrl' => 'ftp://test.com']);
@@ -52,7 +52,7 @@ class SimpleApiMiddlewareTest extends PHPUnit_Framework_TestCase
     public function testShortenReturns400whenLongUrlIsInvalid()
     {
         $shortUrlService = $this->prophesize(ShortUrlService::class);
-        $middleware = new ShortenApiMiddleware($shortUrlService->reveal());
+        $middleware = new ShortenApiMiddleware($shortUrlService->reveal(), 'http://short.me');
 
         $request = new ServerRequest([], [], 'http://short.me/shorten');
         $request = $request->withParsedBody(['longUrl' => 'h://x']);

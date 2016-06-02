@@ -4,6 +4,7 @@ namespace MiniUrl\Test\Middleware;
 
 use MiniUrl\Entity\ShortUrl;
 use MiniUrl\Middleware\ExpandApiMiddleware;
+use MiniUrl\Repository\RepositoryInterface;
 use MiniUrl\Service\ShortUrlService;
 use PHPUnit_Framework_TestCase;
 use Zend\Diactoros\Request;
@@ -14,11 +15,11 @@ class ExpandApiMiddlewareTest extends PHPUnit_Framework_TestCase
 {
     public function testExpandReturnsLongUrl()
     {
-        $shortUrlService = $this->prophesize(ShortUrlService::class);
-        $shortUrlService->expand('/squeezed')
-            ->willReturn(new ShortUrl('http://long-url.com/path/to/image.jpg', 'http://short.me/squeezed'));
+        $shortUrlRepository = $this->prophesize(RepositoryInterface::class);
+        $shortUrlRepository->findLongUrl('squeezed')
+            ->willReturn('http://long-url.com/path/to/image.jpg');
 
-        $middleware = new ExpandApiMiddleware($shortUrlService->reveal());
+        $middleware = new ExpandApiMiddleware($shortUrlRepository->reveal());
 
         $request = new ServerRequest([], [], 'http://short.me/expand');
         $request = $request->withParsedBody(['shortUrl' => 'http://short.me/squeezed']);
@@ -29,8 +30,8 @@ class ExpandApiMiddlewareTest extends PHPUnit_Framework_TestCase
 
     public function testExpandReturns400whenShortUrlIsMissing()
     {
-        $shortUrlService = $this->prophesize(ShortUrlService::class);
-        $middleware = new ExpandApiMiddleware($shortUrlService->reveal());
+        $shortUrlRepository = $this->prophesize(RepositoryInterface::class);
+        $middleware = new ExpandApiMiddleware($shortUrlRepository->reveal());
 
         $request = new ServerRequest([], [], 'http://short.me/expand');
         $request = $request->withParsedBody(['x' => 'y']);
@@ -40,8 +41,8 @@ class ExpandApiMiddlewareTest extends PHPUnit_Framework_TestCase
 
     public function testExpandReturns400whenShortUrlIsInvalid()
     {
-        $shortUrlService = $this->prophesize(ShortUrlService::class);
-        $middleware = new ExpandApiMiddleware($shortUrlService->reveal());
+        $shortUrlRepository = $this->prophesize(RepositoryInterface::class);
+        $middleware = new ExpandApiMiddleware($shortUrlRepository->reveal());
 
         $request = new ServerRequest([], [], 'http://short.me/expand');
         $request = $request->withParsedBody(['shortUrl' => 'h://x']);

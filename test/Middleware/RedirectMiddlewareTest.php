@@ -5,6 +5,7 @@ namespace MiniUrl\Test\Middleware;
 use DateTime;
 use MiniUrl\Entity\ShortUrl;
 use MiniUrl\Middleware\RedirectMiddleware;
+use MiniUrl\Repository\RepositoryInterface;
 use MiniUrl\Service\ShortUrlService;
 use PHPUnit_Framework_TestCase;
 use Zend\Diactoros\Request;
@@ -15,9 +16,9 @@ class RedirectMiddlewareTest extends PHPUnit_Framework_TestCase
 {
     public function testUserIsRedirectedToLongUrl()
     {
-        $shortUrlService = $this->prophesize(ShortUrlService::class);
-        $shortUrlService->expand('/test')
-            ->willReturn(new ShortUrl('http://mateusztymek.pl', 'http://short.me/test', new DateTime()));
+        $shortUrlService = $this->prophesize(RepositoryInterface::class);
+        $shortUrlService->findLongUrl('test')
+            ->willReturn('http://mateusztymek.pl');
 
         $middleware = new RedirectMiddleware($shortUrlService->reveal());
 
@@ -30,8 +31,8 @@ class RedirectMiddlewareTest extends PHPUnit_Framework_TestCase
 
     public function test404IsReturnedIfShortUrlDoesNotExist()
     {
-        $shortUrlService = $this->prophesize(ShortUrlService::class);
-        $shortUrlService->expand('/test')
+        $shortUrlService = $this->prophesize(RepositoryInterface::class);
+        $shortUrlService->findLongUrl('test')
             ->willReturn(null);
 
         $middleware = new RedirectMiddleware($shortUrlService->reveal());
